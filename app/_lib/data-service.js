@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { supabase } from "./supabase";
 import { eachDayOfInterval } from "date-fns";
+import { supabase } from "./supabase";
 
 /////////////
 // GET
@@ -13,7 +13,7 @@ export async function getCabin(id) {
     .single();
 
   // For testing
-  // await new Promise((res) => setTimeout(res, 1000));
+  // await new Promise((res) => setTimeout(res, 2000));
 
   if (error) {
     console.error(error);
@@ -44,7 +44,7 @@ export const getCabins = async function () {
     .order("name");
 
   // For testing
-  // await new Promise((res) => setTimeout(res, 3000));
+  // await new Promise((res) => setTimeout(res, 2000));
 
   if (error) {
     console.error(error);
@@ -86,7 +86,7 @@ export async function getBookings(guestId) {
     .from("bookings")
     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
     .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)",
+      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)"
     )
     .eq("guestId", guestId)
     .order("startDate");
@@ -132,6 +132,8 @@ export async function getBookedDatesByCabinId(cabinId) {
 export async function getSettings() {
   const { data, error } = await supabase.from("settings").select("*").single();
 
+  // await new Promise((res) => setTimeout(res, 5000));
+
   if (error) {
     console.error(error);
     throw new Error("Settings could not be loaded");
@@ -143,7 +145,7 @@ export async function getSettings() {
 export async function getCountries() {
   try {
     const res = await fetch(
-      "https://restcountries.com/v2/all?fields=name,flag",
+      "https://restcountries.com/v2/all?fields=name,flag"
     );
     const countries = await res.json();
     return countries;
